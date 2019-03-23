@@ -18,9 +18,9 @@ def get_file_text_content():
 
 def send_to_firebase(txt):
     url = "https://{}/messages.json".format(firebase_url)
-    print("sending {} to {}".format(txt, url))
+    print("Sending {} to {}".format(txt, url))
     r = requests.post(url, json={'txt': txt})
-    print("response:", r.status_code, r.content)
+    print("Response:", r.status_code, r.content)
 
 
 actual_file_modification_time = get_modified_time()
