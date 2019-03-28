@@ -2,9 +2,12 @@ import os
 import time
 import requests
 
+from upm import pyupm_jhd1313m1 as lcd
+
+lcd_refer = lcd.Jhd1313m1(0, 0x3E, 0x62)
 sleep_seconds = 1
 file_path = 'file.txt'
-firebase_url = '<firebase_project_name>.firebaseio.com'
+firebase_url = 'projeto-embarcado.firebaseio.com'
 
 
 def get_modified_time():
@@ -23,6 +26,13 @@ def send_to_firebase(txt):
     print("Response:", r.status_code, r.content)
 
 
+def write_lcd(txt):
+    print('Writing {} on LCD...'.format(txt))
+    lcd_refer.setCursor(0, 0)
+    lcd_refer.setColor(255, 0, 0)
+    lcd_refer.write('Value: {}'.format(txt))
+
+
 actual_file_modification_time = get_modified_time()
 
 while True:
@@ -33,6 +43,8 @@ while True:
     if new_file_modified_time != actual_file_modification_time:
         print("Changes detected....")
         actual_file_modification_time = new_file_modified_time
-        send_to_firebase(get_file_text_content())
+        file_content = get_file_text_content()
+        write_lcd(file_content)
+        send_to_firebase(file_content)
 
     time.sleep(sleep_seconds)
